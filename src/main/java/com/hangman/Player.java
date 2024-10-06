@@ -48,7 +48,7 @@ public class Player {
         String letter = scann.nextLine();
         letter = letter.toLowerCase();
 
-        if ((Pattern.matches("[a-z]+", letter) || Pattern.matches("[a-я]+", letter)) && letter.length() == 1) {
+        if ((Pattern.matches("[a-z]+", letter) || Pattern.matches("[a-я]+", letter) || Pattern.matches("[1]+", letter)) && letter.length() == 1) {
             return letter;
         } else {
             return null;

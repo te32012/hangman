@@ -4,37 +4,40 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Game {
-    private String currentWord;
-    private HashMap<String, List<Integer>> word;
+
+    private Word wordObj;
     private int level;
     private int countError;
 
-    public HashMap<String, List<Integer>>  getWord() {
-        return word;
+    public HashMap<String, List<Integer>> getWord() {
+        return wordObj.getWordMap();
     }
 
-    public Game(String currentWord, HashMap<String, List<Integer>> word, int level) {
+    public String getAdvice() {
+        return wordObj.getAdvice();
+    }
+
+    public Game(Word word, int level) {
+        this.wordObj = word;
         this.level = level;
-        this.word = word;
-        this.currentWord = currentWord;
     }
 
     public void nextStep(String symbol)  {
-        List<Integer> tmp = word.get(symbol);
+        List<Integer> tmp = getWord().get(symbol);
         if (tmp != null && tmp.size() > 0) {
             String newCurrentWord = "";
             HashSet<Integer> data = new HashSet<>();
             for (int i = 0; i < tmp.size(); i++) {
                 data.add(tmp.get(i));
             }    
-            for (int i = 0; i < currentWord.length(); i++) {
+            for (int i = 0; i < wordObj.getCurrentWord().length(); i++) {
                 if (data.contains(Integer.valueOf(i))) {
                     newCurrentWord = newCurrentWord + symbol;   
                 } else {
-                    newCurrentWord = newCurrentWord + String.valueOf(currentWord.charAt(i));
+                    newCurrentWord = newCurrentWord + String.valueOf(wordObj.getCurrentWord().charAt(i));
                 }
             }
-            this.currentWord = newCurrentWord;
+            wordObj.setCurrentWord(newCurrentWord);
         } else {
             countError++;
         }
@@ -45,11 +48,11 @@ public class Game {
     }
 
     public boolean hashStep() {
-        return countError < level && currentWord.contains("*");
+        return countError < level && wordObj.getCurrentWord().contains("*");
     }
 
     public String printWord() {
-        return currentWord;
+        return wordObj.getCurrentWord();
     }
 
     public String printHangman() {

@@ -16,7 +16,7 @@ public class GameLoop {
         this.player = player;
     }
 
-    public void initGame(HashMap<Category, List<String>> categoris) {
+    public void initGame(HashMap<Category, List<Pair<String>>> categoris) {
         Random random = new Random();
         int level = player.getLevel();
         if (level == -1) {
@@ -41,25 +41,25 @@ public class GameLoop {
         }
         int z = random.nextInt(categoris.size()) % categoris.size();
         var tmp = categoris.get(cat);
-        String wd = tmp.get(z);
+        Pair<String> wd = tmp.get(z);
         HashMap<String, List<Integer>> word = new HashMap<>();
-        for (int i = 0; i < wd.length(); i++) {
-            List<Integer> t = word.get(String.valueOf(wd.charAt(i)));
+        for (int i = 0; i < wd.first.length(); i++) {
+            List<Integer> t = word.get(String.valueOf(wd.first.charAt(i)));
             if (t == null) {
                 ArrayList<Integer> y = new ArrayList<Integer>();
                 y.add(Integer.valueOf(i));
-                word.put(String.valueOf(wd.charAt(i)), y);
+                word.put(String.valueOf(wd.first.charAt(i)), y);
             } else {
                 t.add(Integer.valueOf(i));
-                word.put(String.valueOf(wd.charAt(i)), t);
+                word.put(String.valueOf(wd.first.charAt(i)), t);
             }
         }
         String x = "";
-        for (int i = 0; i < wd.length(); i++) {
+        for (int i = 0; i < wd.first.length(); i++) {
             x = x + "*";
         }
 
-        this.game = new Game(x, word, level);
+        this.game = new Game(new Word(x, word, wd.second), level);
     }
 
     public void nextGame() {
@@ -68,8 +68,12 @@ public class GameLoop {
             while (tmp == null || tmp.length() == 0) {
                 tmp = player.getLetter();
             }
-
-            game.nextStep(tmp);
+            if (tmp.equals("1")) {
+                player.print("Подсказка:");
+                player.print(game.getAdvice());
+            } else {
+                game.nextStep(tmp);
+            }
             player.print("Текущее слово:");
             player.print(game.printWord());
             player.print("количество возможных ошибок:");
